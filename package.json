@@ -1,0 +1,36 @@
+{
+  "name": "test-select",
+  "version": "0.1.0",
+  "author": "Kataev Vitaliy",
+  "license": "WTFPL",
+  "private": true,
+  "dependencies": {
+    "axios": "^0.17.1",
+    "classnames": "^2.2.5",
+    "npm-run-all": "^4.1.2",
+    "prop-types": "^15.6.0",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
+    "react-redux": "^5.0.6",
+    "react-scripts": "1.0.17",
+    "redux": "^3.7.2",
+    "redux-thunk": "^2.2.0",
+    "stylus": "^0.54.5"
+  },
+  "scripts": {
+    "start-js": "react-scripts start",
+    "build-js": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject",
+    "watch-css": "stylus -w -o ./src/app.css -I ./src/style/ ./src/style/style.styl",
+    "build-css": "stylus -o ./src/app.css -I ./src/style/ ./src/style/style.styl",
+    "start": "npm-run-all -p watch-css start-js",
+    "build": "npm-run-all -p build-css build-js",
+    "lint": "eslint ./src/**/*.js"
+  },
+  "devDependencies": {
+    "eslint": "^4.12.1",
+    "eslint-config-airbnb": "^16.1.0",
+    "eslint-plugin-jsx-a11y": "^6.0.2"
+  }
+}

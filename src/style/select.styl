@@ -1,0 +1,168 @@
+// variables
+width = 340px
+height = 58px
+borderColor = #aaa
+borderRadius = 4px
+textColor = darken(borderColor, 40%)
+fontSize = 16px
+
+.select {
+  width: width
+  position: relative
+  vertical-align: middle
+  margin: 12px 0
+
+  &_control {
+    border: 1px solid borderColor
+    border-radius: borderRadius
+
+    &:after {
+      content: "";
+      display: table;
+      clear: both;
+    }
+
+    &:before {
+      content: "";
+      position: absolute
+      top: 50%
+      margin-top: -5px;
+      right: 20px;
+      width: 0;
+      height: 0;
+      border-left: 5px solid transparent;
+      border-right: 5px solid transparent;
+      border-top: 8px solid borderColor;
+      transition: transform 0.3s linear
+    }
+  }
+
+  &_options {
+    border: 1px solid borderColor
+    background: #fff
+    z-index: 100
+    max-height: height * 8;
+    overflow-y: auto;
+    border-radius: 0 0 borderRadius borderRadius
+    animation-duration: 0.5s
+    animation-fill-mode: both
+    animation-name: fadeInUp;
+    position: absolute
+    top: 59px;
+    left: 0
+    right: 0
+  }
+
+  &__upper-label, &__opened {
+  // webstorm unsupport & ^[0] expression (http://stylus-lang.com/docs/selectors.html#partial-reference)
+    & .select_label {
+      background: #fff
+      transform: translate3d(0, -(fontSize - 3px), 0);
+    }
+  }
+
+  &__opened {
+    & .select_control {
+      border-radius: borderRadius borderRadius 0 0
+
+      &:before {
+        transform: rotate(180deg)
+      }
+    }
+  }
+
+  &:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+
+  &_label, &_value {
+    max-width: width - 20px
+    overflow: hidden
+    text-overflow: ellipsis
+    white-space: nowrap
+    pointer-events: none
+    transition: transform .4s cubic-bezier(.25, .8, .25, 1)
+    position: absolute
+    transform: translate3d(0, ((height - fontSize) / 2) - 3, 0);
+    margin: 0 4px 0 24px;
+    padding: 2px 4px 1px;
+    background: transparent
+    box-sizing: border-box;
+    color: textColor
+    font-size: fontSize
+  }
+
+  &_value {
+    margin-left: 17px
+
+    &__invisible {
+      display: none
+    }
+  }
+
+  & input {
+    display: block;
+    margin-top: 0;
+    background: none;
+    padding: 2px 50px 1px 20px;
+    border: none
+    line-height: height - 4px;
+    height: height;
+    width: 100%;
+    box-sizing: border-box;
+    float: left;
+    outline: none
+    font-size: fontSize
+    color: textColor
+  }
+
+  &_item {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    height: height
+    line-height: height - 4px
+    margin: 0
+    padding: 2px 4px 1px 20px;
+    color: textColor
+    cursor: pointer
+    transition: all 0.3s cubic-bezier(.25, .8, .25, 1)
+
+    &__marked {
+      color: orange
+      text-decoration: underline
+    }
+
+    &__focused {
+      background: lighten(borderColor, 50%) !important
+      color: darken(borderColor, 50%)
+    }
+
+    &__selected {
+      background: lighten(borderColor, 80%)
+    }
+  }
+
+  &_native {
+    opacity: 0
+    width: 100%
+    height: 100%
+    position: absolute
+    top: 0
+    left: 0
+  }
+}
+
+@keyframes fadeInUp {
+  0% {
+    opacity: 0
+    transform: translate3d(0, -10%, 0)
+  }
+
+  100% {
+    opacity: 1
+    transform: none
+  }
+}

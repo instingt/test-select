@@ -1,0 +1,21 @@
+{
+  "parser": "babel-eslint",
+  "extends": [
+    "airbnb"
+  ],
+  "plugins": [
+    "react"
+  ],
+  "rules": {
+    "react/jsx-curly-spacing": 0,
+    "import/no-named-as-default": "always",
+    "import/no-named-as-default-member": "always",
+    "quote-props": 0
+  },
+  "env": {
+    "browser": true,
+    "node": true,
+    "jasmine": true,
+    "es6": true
+  }
+}
