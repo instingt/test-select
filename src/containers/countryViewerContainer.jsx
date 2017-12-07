@@ -1,16 +1,18 @@
-import PropTypes from 'prop-types';
+// @flow
+
 import React from 'react';
 import { connect } from 'react-redux';
+import type { Option } from '../types';
 
-function CountryViewerContainer({ country }) {
-  return country ?
-    <span>Выбрана страна с кодом <strong>{ country }</strong></span> :
-    <span>Страна не выбрана</span>;
+type Props = {
+  country: Option | null
 }
 
-CountryViewerContainer.propTypes = {
-  country: PropTypes.string.isRequired,
-};
+function CountryViewerContainer({ country }: Props) {
+  return country ?
+    <span>Выбрана страна: <strong>{ country.label }</strong></span> :
+    <span>Страна не выбрана</span>;
+}
 
 function mapStateToProps({ app: { country } }) {
   return {

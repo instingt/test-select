@@ -1,18 +1,20 @@
+// @flow
+
 import classnames from 'classnames';
-import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import type { Option } from '../../../types';
 
-export default class Options extends Component {
-  static propTypes = {
-    index: PropTypes.number.isRequired,
-    selected: PropTypes.bool.isRequired,
-    option: PropTypes.instanceOf(Object).isRequired,
-    isFocused: PropTypes.bool.isRequired,
-    onFocus: PropTypes.func.isRequired,
-    onSelect: PropTypes.func.isRequired,
-    markLength: PropTypes.number.isRequired,
-  };
+type Props = {
+  index: number,
+  selected: boolean,
+  option: Option,
+  isFocused: boolean,
+  onFocus: (index: number) => mixed,
+  onSelect: (option: Option) => mixed,
+  markLength: number
+}
 
+export default class Options extends Component<Props> {
   onFocus() {
     const { isFocused, index, onFocus } = this.props;
     if (!isFocused) {
@@ -32,8 +34,9 @@ export default class Options extends Component {
     this.props.onSelect(this.props.option);
   };
 
-  markMatched(label, value) {
+  markMatched(option: Option) {
     const { markLength } = this.props;
+    const { value, label } = option;
     return [
       <span className="select_item__marked" key={ `${value}-mark` }>{ label.slice(0, markLength) }</span>,
       label.slice(markLength),
@@ -65,7 +68,7 @@ export default class Options extends Component {
         title={ option.label }
         id={ `option-${index}` }
       >
-        { this.markMatched(option.label, option.value) }
+        { this.markMatched(option) }
       </div>
     );
   }

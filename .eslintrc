@@ -4,7 +4,8 @@
     "airbnb"
   ],
   "plugins": [
-    "react"
+    "react",
+    "flowtype"
   ],
   "rules": {
     "react/jsx-curly-spacing": 0,
@@ -17,5 +18,20 @@
     "node": true,
     "jasmine": true,
     "es6": true
+  },
+  "globals": {
+    "ReactComponent": false,
+    "ReactElement": false,
+    "SyntheticEvent": false,
+    "SyntheticClipboardEvent": false,
+    "SyntheticCompositionEvent": false,
+    "SyntheticInputEvent": false,
+    "SyntheticUIEvent": false,
+    "SyntheticFocusEvent": false,
+    "SyntheticKeyboardEvent": false,
+    "SyntheticMouseEvent": false,
+    "SyntheticDragEvent": false,
+    "SyntheticWheelEvent": false,
+    "SyntheticTouchEvent": false
   }
 }

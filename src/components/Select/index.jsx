@@ -1,19 +1,27 @@
 /* eslint-disable react/no-find-dom-node */
 /* eslint-disable jsx-a11y/label-has-for */
+// @flow
 import classnames from 'classnames';
-import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
+import type { Option } from '../../types';
 import Options from './private/Option';
 
-export default class Select extends Component {
-  static propTypes = {
-    placeholder: PropTypes.string,
-    options: PropTypes.arrayOf(PropTypes.object),
-    onChange: PropTypes.func,
-    value: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-  };
+type Props = {
+  placeholder: string,
+  options: Array<Option>,
+  onChange: (option: Option) => mixed,
+  value: Option,
+}
 
+type State = {
+  isOpen: boolean,
+  searchValue: string,
+  value: Option | null,
+  focusIndex: number
+}
+
+export default class Select extends Component<Props, State> {
   static defaultProps = {
     placeholder: '',
     options: [],
@@ -35,7 +43,7 @@ export default class Select extends Component {
     focusIndex: 0,
   };
 
-  componentWillReceiveProps(newProps) {
+  componentWillReceiveProps(newProps: Props) {
     if (newProps.value !== this.state.value) {
       this.setState({
         value: newProps.value,
@@ -43,7 +51,7 @@ export default class Select extends Component {
     }
   }
 
-  componentDidUpdate(nextProps, nextState) {
+  componentDidUpdate(nextProps: Props, nextState: State) {
     if (nextState.focusIndex === this.state.focusIndex) {
       return;
     }
@@ -51,27 +59,32 @@ export default class Select extends Component {
     if (this.state.isOpen && this.needScroll) {
       // prevent scroll by mouse over
       this.needScroll = false;
-      const options = ReactDOM.findDOMNode(document.querySelector(`#option-${this.state.focusIndex}`));
-      const optionsList = ReactDOM.findDOMNode(document.querySelector(`#select_options-${this.id}`));
+      const options: Element | Text | null = ReactDOM.findDOMNode(document.querySelector(`#option-${this.state.focusIndex}`));
+      const optionsList: Element | Text | null = ReactDOM.findDOMNode(document.querySelector(`#select_options-${this.id}`));
 
       if (!options || !optionsList) {
         return;
       }
 
-      const { scrollTop } = optionsList;
-      const scrollBottom = scrollTop + optionsList.offsetHeight;
-      const optionTop = options.offsetTop;
-      const optionBottom = optionTop + options.offsetHeight;
+      if (options instanceof HTMLElement && optionsList instanceof HTMLElement) {
+        const { scrollTop } = optionsList;
+        const scrollBottom = scrollTop + optionsList.offsetHeight;
+        const optionTop = options.offsetTop;
+        const optionBottom = optionTop + options.offsetHeight;
 
-      if (scrollTop > optionTop || scrollBottom < optionBottom) {
-        optionsList.scrollTop = options.offsetTop;
+        if (scrollTop > optionTop || scrollBottom < optionBottom) {
+          optionsList.scrollTop = options.offsetTop;
+        }
       }
     }
   }
 
   onInputFocus = () => this.setState({ isOpen: true });
   onInputBlur = () => this.setState({ isOpen: false });
-  onInputChange = e => this.setState({ searchValue: e.target.value, focusIndex: 0 });
+  onInputChange = (e: SyntheticInputEvent<HTMLInputElement>) => this.setState({
+    searchValue: e.target.value,
+    focusIndex: 0,
+  });
 
   getOptions() {
     const { value, searchValue, focusIndex } = this.state;
@@ -93,13 +106,13 @@ export default class Select extends Component {
         option={ option }
         isFocused={ focusIndex === index }
         onFocus={ idx => this.setState({ focusIndex: idx }) }
-        onSelect={ o => this.handleChange(o.value) }
+        onSelect={ o => this.handleChange(o) }
         markLength={ searchValue.length }
       />
     ));
   }
 
-  getOptionsData() {
+  getOptionsData(): Array<Option> {
     return this.props.options
       .filter(option => option
         .label
@@ -107,7 +120,11 @@ export default class Select extends Component {
         .startsWith(this.state.searchValue.toLowerCase()));
   }
 
-  handleChange(value) {
+  touch: boolean;
+  input: ?HTMLInputElement;
+  needScroll: boolean;
+
+  handleChange(value: Option) {
     this.setState({
       value,
       searchValue: '',
@@ -116,7 +133,7 @@ export default class Select extends Component {
     this.props.onChange(value);
   }
 
-  handleKeyDown = (e) => {
+  handleKeyDown = (e: SyntheticKeyboardEvent<HTMLInputElement>) => {
     let { focusIndex } = this.state;
     const options = this.getOptionsData();
     const optionsLength = options.length;
@@ -130,8 +147,11 @@ export default class Select extends Component {
     }
 
     if (e.key === 'Enter') {
+      if (!this.input) {
+        return;
+      }
       this.input.blur();
-      this.handleChange(options[focusIndex].value);
+      this.handleChange(options[focusIndex]);
       return;
     }
 
@@ -143,13 +163,16 @@ export default class Select extends Component {
 
   id = Select.getNextId();
 
-  openMobileSelect = (e) => {
+  openMobileSelect = (e: Event) => {
     if (this.touch) {
       this.touch = false;
       return;
     }
 
     e.preventDefault();
+    if (!this.input) {
+      return;
+    }
     this.input.focus();
   };
 
@@ -160,10 +183,16 @@ export default class Select extends Component {
       'select_value__invisible': !!searchValue,
     });
 
-    if (value) {
+    if (!value) {
+      return null;
+    }
+
+    const finedOption = options.find(option => `${option.value}` === `${value.value}`);
+
+    if (finedOption) {
       return (
         <span className={ className }>
-          { options.find(option => `${option.value}` === `${value}`).label }
+          { finedOption.label }
         </span>
       );
     }

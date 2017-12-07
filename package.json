@@ -7,6 +7,7 @@
   "dependencies": {
     "axios": "^0.17.1",
     "classnames": "^2.2.5",
+    "flow-bin": "^0.59.0",
     "npm-run-all": "^4.1.2",
     "prop-types": "^15.6.0",
     "react": "^16.2.0",
@@ -20,6 +21,7 @@
   "scripts": {
     "start-js": "react-scripts start",
     "build-js": "react-scripts build",
+    "flow": "flow",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "watch-css": "stylus -w -o ./src/app.css -I ./src/style/ ./src/style/style.styl",
@@ -31,6 +33,7 @@
   "devDependencies": {
     "eslint": "^4.12.1",
     "eslint-config-airbnb": "^16.1.0",
+    "eslint-plugin-flowtype": "^2.39.1",
     "eslint-plugin-jsx-a11y": "^6.0.2"
   }
 }
